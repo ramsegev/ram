@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ramxmlModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="concepts">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_doc" Type="int" Nullable="false" />
+    <Property Name="parent" Type="int" />
+  </EntityType>
+  <EntityType Name="doc">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="text" Nullable="false" />
+  </EntityType>
+  <EntityType Name="dropdown">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="value" Type="varchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="nodes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_concept" Type="int" Nullable="false" />
+    <Property Name="nodeName" Type="text" Nullable="false" />
+    <Property Name="value" Type="text" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ontology">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_concept" Type="int" Nullable="false" />
+    <Property Name="dropdown1" Type="text" Nullable="false" />
+    <Property Name="dropdown2" Type="text" Nullable="false" />
+    <Property Name="dropdown3" Type="text" Nullable="false" />
+    <Property Name="id_doc" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_concepts_doc">
+    <End Role="doc" Type="Self.doc" Multiplicity="1" />
+    <End Role="concepts" Type="Self.concepts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="doc">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="concepts">
+        <PropertyRef Name="id_doc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_nodes_concepts">
+    <End Role="concepts" Type="Self.concepts" Multiplicity="1" />
+    <End Role="nodes" Type="Self.nodes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="concepts">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="nodes">
+        <PropertyRef Name="id_concept" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ramxmlModelStoreContainer">
+    <EntitySet Name="concepts" EntityType="Self.concepts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="doc" EntityType="Self.doc" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="dropdown" EntityType="Self.dropdown" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="nodes" EntityType="Self.nodes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ontology" EntityType="Self.ontology" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_concepts_doc" Association="Self.FK_concepts_doc">
+      <End Role="doc" EntitySet="doc" />
+      <End Role="concepts" EntitySet="concepts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_nodes_concepts" Association="Self.FK_nodes_concepts">
+      <End Role="concepts" EntitySet="concepts" />
+      <End Role="nodes" EntitySet="nodes" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="633ca6d767234c2285a67f053ebe86ad" Name="Diagram1">
+        <EntityTypeShape EntityType="ramxmlModel.dropdown" Width="1.5" PointX="7.625" PointY="6.5" />
+        <EntityTypeShape EntityType="ramxmlModel.ontology" Width="1.5" PointX="5.25" PointY="6" />
+        <EntityTypeShape EntityType="ramxmlModel.concepts" Width="1.5" PointX="3" PointY="0.875" />
+        <EntityTypeShape EntityType="ramxmlModel.doc" Width="1.5" PointX="0.75" PointY="1.125" />
+        <EntityTypeShape EntityType="ramxmlModel.nodes" Width="1.5" PointX="5.25" PointY="0.875" />
+        <AssociationConnector Association="ramxmlModel.FK_concepts_doc" />
+        <AssociationConnector Association="ramxmlModel.FK_nodes_concepts" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ramxmlModelStoreContainer" CdmEntityContainer="ramxmlEntities">
+    <EntitySetMapping Name="dropdown">
+      <EntityTypeMapping TypeName="ramxmlModel.dropdown">
+        <MappingFragment StoreEntitySet="dropdown">
+          <ScalarProperty Name="value" ColumnName="value" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ontology">
+      <EntityTypeMapping TypeName="ramxmlModel.ontology">
+        <MappingFragment StoreEntitySet="ontology">
+          <ScalarProperty Name="id_doc" ColumnName="id_doc" />
+          <ScalarProperty Name="dropdown3" ColumnName="dropdown3" />
+          <ScalarProperty Name="dropdown2" ColumnName="dropdown2" />
+          <ScalarProperty Name="dropdown1" ColumnName="dropdown1" />
+          <ScalarProperty Name="id_concept" ColumnName="id_concept" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="concepts">
+      <EntityTypeMapping TypeName="ramxmlModel.concepts">
+        <MappingFragment StoreEntitySet="concepts">
+          <ScalarProperty Name="parent" ColumnName="parent" />
+          <ScalarProperty Name="id_doc" ColumnName="id_doc" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="doc">
+      <EntityTypeMapping TypeName="ramxmlModel.doc">
+        <MappingFragment StoreEntitySet="doc">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="nodes">
+      <EntityTypeMapping TypeName="ramxmlModel.nodes">
+        <MappingFragment StoreEntitySet="nodes">
+          <ScalarProperty Name="value" ColumnName="value" />
+          <ScalarProperty Name="nodeName" ColumnName="nodeName" />
+          <ScalarProperty Name="id_concept" ColumnName="id_concept" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

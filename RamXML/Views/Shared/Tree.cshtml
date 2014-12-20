@@ -1,0 +1,22 @@
+﻿@model RamXML.Models.DccModel
+<script>
+    $("#tree1").jstree('destroy');
+    //
+    var cP = @ViewBag.Page;
+</script>
+<div id="tree1">
+<ul>
+
+    <li data-jstree='{ "type" : "first" }' id="first">
+        Thesaurus
+        <ul>
+            
+            @Html.Raw(Model.LoadTree(ViewBag.Page, ViewBag.Count));
+
+        </ul>
+
+    </li>
+</ul>
+</div>
+
+

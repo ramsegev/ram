@@ -1,0 +1,14 @@
+c:\Users\helll_000\documents\visual studio 2013\Projects\RamXML\Xml.Helper\bin\Release\Xml.Helper.dll
+c:\Users\helll_000\documents\visual studio 2013\Projects\RamXML\Xml.Helper\bin\Release\Xml.Helper.pdb
+c:\Users\helll_000\documents\visual studio 2013\Projects\RamXML\Xml.Helper\obj\Release\Xml.Helper.dll
+c:\Users\helll_000\documents\visual studio 2013\Projects\RamXML\Xml.Helper\obj\Release\Xml.Helper.pdb
+C:\Users\Алексей\Documents\Visual Studio 2013\Projects\RamXml\Xml.Helper\bin\Release\Xml.Helper.dll
+C:\Users\Алексей\Documents\Visual Studio 2013\Projects\RamXml\Xml.Helper\bin\Release\Xml.Helper.pdb
+C:\Users\Алексей\Documents\Visual Studio 2013\Projects\RamXml\Xml.Helper\obj\Release\Xml.Helper.csprojResolveAssemblyReference.cache
+C:\Users\Алексей\Documents\Visual Studio 2013\Projects\RamXml\Xml.Helper\obj\Release\Xml.Helper.dll
+C:\Users\Алексей\Documents\Visual Studio 2013\Projects\RamXml\Xml.Helper\obj\Release\Xml.Helper.pdb
+C:\Users\helll_000\documents\visual studio 2013\Projects\RamXML\Xml.Helper\obj\Release\Xml.Helper.csprojResolveAssemblyReference.cache
+C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Release\PagedList.dll
+C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Release\PagedList.Mvc.dll
+C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Release\PagedList.xml
+C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Release\PagedList.Mvc.xml

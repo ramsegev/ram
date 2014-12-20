@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ramxmlModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="ramxmlEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="dropdown" EntityType="ramxmlModel.dropdown" />
+    <EntitySet Name="ontology" EntityType="ramxmlModel.ontology" />
+    <EntitySet Name="concepts" EntityType="ramxmlModel.concepts" />
+    <EntitySet Name="doc" EntityType="ramxmlModel.doc" />
+    <EntitySet Name="nodes" EntityType="ramxmlModel.nodes" />
+    <AssociationSet Name="FK_concepts_doc" Association="ramxmlModel.FK_concepts_doc">
+      <End Role="doc" EntitySet="doc" />
+      <End Role="concepts" EntitySet="concepts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_nodes_concepts" Association="ramxmlModel.FK_nodes_concepts">
+      <End Role="concepts" EntitySet="concepts" />
+      <End Role="nodes" EntitySet="nodes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="dropdown">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ontology">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_concept" Type="Int32" Nullable="false" />
+    <Property Name="dropdown1" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="dropdown2" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="dropdown3" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="id_doc" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="concepts">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_doc" Type="Int32" Nullable="false" />
+    <Property Name="parent" Type="Int32" />
+    <NavigationProperty Name="doc" Relationship="ramxmlModel.FK_concepts_doc" FromRole="concepts" ToRole="doc" />
+    <NavigationProperty Name="nodes" Relationship="ramxmlModel.FK_nodes_concepts" FromRole="concepts" ToRole="nodes" />
+  </EntityType>
+  <EntityType Name="doc">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="concepts" Relationship="ramxmlModel.FK_concepts_doc" FromRole="doc" ToRole="concepts" />
+  </EntityType>
+  <EntityType Name="nodes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_concept" Type="Int32" Nullable="false" />
+    <Property Name="nodeName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="concepts" Relationship="ramxmlModel.FK_nodes_concepts" FromRole="nodes" ToRole="concepts" />
+  </EntityType>
+  <Association Name="FK_concepts_doc">
+    <End Type="ramxmlModel.doc" Role="doc" Multiplicity="1" />
+    <End Type="ramxmlModel.concepts" Role="concepts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="doc">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="concepts">
+        <PropertyRef Name="id_doc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_nodes_concepts">
+    <End Type="ramxmlModel.concepts" Role="concepts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ramxmlModel.nodes" Role="nodes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="concepts">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="nodes">
+        <PropertyRef Name="id_concept" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,914 @@
+﻿@{
+    ViewBag.Title = "XMLShow";
+}
+
+@model RamXML.Models.DccModel
+
+
+
+
+<h2>Document : <small>@ViewBag.docName</small></h2>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Option</h3>
+    </div>
+    <div class="panel-body">
+        <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-upload"></span> Upload new</a>
+        <button class="btn btn-default disabled"><span class="glyphicon glyphicon-download"></span> Download current</button>
+
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+    <div class="col-md-6">
+
+
+
+        <div class="input-group" style="margin-bottom: 10px">
+            <input type="text" id="search" placeholder="Search value" name="search" class="form-control typeahead">
+
+            <span class="input-group-btn">
+
+                <button class="btn btn-default" type="button" onclick="Search()">Go</button>
+                <a href="../Home/XmlShow/" class="btn btn-default">Clear</a>
+            </span>
+
+        </div>
+
+
+
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">TreeView</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">ListView</a></li>
+
+        </ul>
+
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home" style="padding-top:10px;">
+
+                <div id="treeObj">
+                    @Html.Partial("Tree")
+                </div>
+
+                <nav class="text-center">
+
+                    <div class="pagination" id="pagination">
+                        @*<li><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+
+                            @for (int i = 0; i < 9 ; i++)
+                            {
+
+                                <li>
+                                    @Ajax.ActionLink((i + 1).ToString(), "Pager", "Home", new { Page = i, Count = ViewBag.Count }, new AjaxOptions { UpdateTargetId = "treeObj" })
+                                </li>
+                            }
+                            <li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>*@
+                    </div>
+
+                </nav>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile" style="padding-top:10px;">
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-6" id="sticky1">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Add ontology</h3>
+            </div>
+            <div class="panel-body">
+                
+                <div class="row col-md-6" style=" margin:10px;">
+                    <div id="remote1">
+                        <input class="sel form-control" id="dropdown1" type="text" placeholder="Ontology Search">
+                    </div>
+
+                </div>
+                <div class="row col-md-8" style=" margin:10px;">
+                    <select id="dr1" data-size="5" class="selectpicker" disabled data-live-search="true"></select>
+                    <button class="btn btn-toolbar btn-sm" id="modalShow" disabled style="margin:2px;" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-toolbar btn-danger btn-sm" id="remove" disabled style="margin:2px;" onclick="DeleteDropDownItems($('#dr1').selectpicker('val'));"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="row col-md-6" style=" margin:10px;">
+                    <div id="remote2">
+                        <input class="sel form-control" id="dropdown2" type="text" placeholder="Ontology Search">
+                    </div>
+
+                </div>
+                <button id="save" class="btn btn-primary pull-right" disabled>Save</button>
+            </div>
+        </div>
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Ontology Table</h3>
+            </div>
+            <div class="panel-body">
+                <div style="height: 250px !important; overflow-y:scroll">
+                    <table id="ont" class="table table-striped">
+
+                        @{
+                            foreach (var item in ViewBag.ontology)
+                            {
+                                <tr>
+                                    @*<td>@item.id_concept</td>*@
+                                    <td>@item.dropdown1</td>
+                                    <td>@item.dropdown2</td>
+                                    <td>@item.dropdown3</td>
+                                    @*<td class="text-right">
+                                            <button class="btn btn-xs btn-danger" onclick="RemoveOntology('@item.id')">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                        </td>*@
+                                </tr>
+                            }
+                        }
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var htmlOption = '';
+    @*@foreach (var item in ViewBag.nodes)
+    {
+        if(item.nodeName == "DESCRIPTOR")
+        {
+        @:htmlOption += '<option value="@(item.id)">@(item.value)</option>';
+            }
+
+    }*@
+</script>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new item ...</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="new_item" name="name" placeholder="write text...." value=" " />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddItemD($('#new_item').val())">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new item ...</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="new_item_tree" name="new_item_tree" placeholder="write text...." value=" " />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddItem();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addSyn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new Synonyms item ...</h4>
+            </div>
+            <div class="modal-body">
+                <span>Select type :</span>
+                <select class="selectpicker" id="type_syn" name="type_syn" data-width="185px">
+                    <option value="UF">UF</option>
+                    <option value="BT">BT</option>
+                    <option value="BT">DF</option>
+                    <option value="DS">DS</option>
+                    <option value="ES">ES</option>
+                    <option value="TNR">TNR</option>
+                </select>
+                <br />
+                <br />
+                <input type="text" class="form-control" id="new_item_syn" name="new_item_syn" placeholder="Write text.." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddItemS();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addTerm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add new Term ...</h4>
+            </div>
+            <div class="modal-body">
+                    
+                <div class="col-md-12 form-group">
+                    <div class="col-md-4">Term</div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="nameTerm" />
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-4">Synonym</div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" id="nameSyn" />
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn" id="addTerm" onclick="AddSynToTerm();">
+                            <span class="glyphicon glyphicon-plus text-success"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" col-md-12 form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                        <ul class="list-group" id="terms" name="terms">
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class=" col-md-12 form-group">
+                    <div class="col-md-4">Father concept</div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="nameFather" />
+                    </div>
+                </div>
+                <div class=" col-md-12 form-group">
+                    <div class="col-md-4">Term description</div>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="descrTerm"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddNewTerm()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    function AddSynToTerm(){
+        if($("#nameSyn").val() !="")
+        {
+            $('#terms').append('<li class="list-group-item">'+$("#nameSyn").val()+'<span class="glyphicon glyphicon-remove pull-right text-danger"></span></li>');
+            $("#nameSyn").val("");
+            $('.list-group-item').click(function(){
+                $(this).remove();
+            });
+        }
+
+    }
+    function AddNewTerm(){
+        var name = $('#nameTerm').val();
+        var BT = $('#nameFather').val();
+        var DF = $('#descrTerm').val();
+        var Syn = new Array();
+        $.each( $('#terms li'), function( key, value ) {
+            Syn.push($(this).text());
+        });
+
+        $("#addTerm").modal('hide');
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddNewItemTree", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:JSON.stringify({
+                "name":name,
+                "syn":Syn,
+                "BT":BT,
+                "DF":DF
+            }),
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+
+        });
+    }
+    $(document).ready(function () {
+
+        //var obj = $('#sticky');
+        //var offset = obj.offset();
+        //var topOffset = offset.top;
+        //var leftOffset = offset.left;
+        //var rightOffset = offset.right;
+        //var marginTop = obj.css("marginTop");
+        //var marginLeft = obj.css("marginLeft");
+        //var Right = obj.css("right");
+        //var width = obj.css("width");
+
+
+        // $("#pagination").pagination();
+        @*$("#pagination").pagination({
+            total_pages: @ViewBag.PagesCount,
+            display_max: 8,
+            current_page: 2,
+            callback: function(event, page) {
+                console.log(page);
+
+
+                }
+        });*@
+        //$("div.holder").jPages({
+        //    containerID : "pagination"
+        //});
+        console.log($.session.get('page'));
+        if(typeof $.session.get('page') !='undefined')
+        {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Pager", "home")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    "Page": $.session.get('page'),
+                    "Count": 20,
+                }),
+                success: function (data) {
+                    $('#treeObj').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                    $('#treeObj').html(data.responseText);
+                }
+
+            });
+        }
+
+        $('#pagination').bootpag({
+            total: @ViewBag.PagesCount,
+            maxVisible: 8,
+            leaps: false,
+            next: '>>',
+            prev: '<<',
+            page: $.session.get('page')
+        }).on("page", function(event, num){
+            $.session.set('page',num);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Pager", "home")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    "Page": num,
+                    "Count": 20,
+                }),
+                success: function (data) {
+                    $('#treeObj').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                    $('#treeObj').html(data.responseText);
+                }
+
+            });
+        });
+
+        $('#pagination li').click(function() {
+            $('#pagination li').removeClass('active');
+            $(this).addClass('active');
+        });
+        $('.panel-group').on('hidden.bs.collapse', function () {
+            $(this).children().removeClass('panel-primary').addClass('panel-success');
+            $('#modalShow').prop('disabled', true);
+            $('#remove').prop('disabled', true);
+            $('#save').prop('disabled', true);
+            $('.selectpicker').prop('disabled', true);
+            $('.selectpicker').selectpicker('render');
+            $('.selectpicker').selectpicker('refresh');
+
+        });
+
+        var SearchVal = new Bloodhound({
+
+
+            prefetch: '@Url.Action("SearchOntology", "home")'+"?searchTterm=%QUERY",
+            remote: '@Url.Action("SearchOntology", "home")'+"?searchTterm=%QUERY",
+            datumTokenizer: function(d) {
+                return Bloodhound.tokenizers.whitespace(d.value);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        SearchVal.initialize();
+
+        $('.typeahead').typeahead({minLength: 3}, {
+            name: 'SearchVal',
+            displayKey: function (str) { return str; },
+            autoselect: 'first',
+            source: SearchVal.ttAdapter()
+        });
+
+        $(".sel").select2({
+            minimumInputLength: 3,
+            ajax: {
+                url: '@Url.Action("SearchOntology", "home")',
+                dataType: 'json',
+                type: "GET",
+                quietMillis: 50,
+                data: function (term) {
+                    return {
+                        searchTterm: term
+                    };
+                },
+                results: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item,
+                                slug: item,
+                                id: item,
+                            }
+                        })
+                    };
+                }
+            }
+        });
+
+
+
+        //$(window).scroll(function () {
+        //    var scrollTop = $(window).scrollTop();
+
+        //    if (scrollTop >= topOffset) {
+
+        //        obj.css({
+        //            top: 60,
+        //            right: 90,
+        //            width: width,
+        //            marginTop: 0,
+        //            marginLeft: leftOffset,
+        //            marginRight: rightOffset,
+        //            position: 'fixed',
+        //        });
+        //    }
+
+        //    if (scrollTop < topOffset) {
+
+        //        obj.css({
+        //            top: 0,
+        //            right: 0,
+        //            marginTop: marginTop,
+        //            marginLeft: marginLeft,
+        //            position: 'relative',
+        //        });
+        //    }
+        //});
+
+        $('#dropdown1').html(htmlOption);
+        $('#dropdown2').html(htmlOption);
+        GetDropDownValue();
+        $('.selectpicker').selectpicker('render');
+        $('.selectpicker').selectpicker('refresh');
+    });
+
+    $("#tree1").bind('move_node.jstree', function (e, data) {
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Drag", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+
+                "oldId": data.node.li_attr.rel,
+                "newId": $("#"+data.parent).attr("rel"),
+                "nodeType": data.node.type
+            }),
+            success: function (data) {
+                //console.log(data);
+            },
+            error: function (data) {
+                //console.log(data);
+            }
+
+        });
+
+
+    });
+
+    function Search()
+    {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Search", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "Query": $('#search').val()
+            }),
+            success: function (data) {
+                $('#treeObj').html(data);
+            },
+            error: function (data) {
+                console.log(data);
+                $('#treeObj').html(data.responseText);
+            }
+
+        });
+    }
+
+    function RemoveNode(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RemoveConcept", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdRemove": id
+            }),
+            success: function (data) {
+                $('#treeObj').html(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+
+        });
+    }
+
+
+
+
+
+    function getTree() {
+        var tree1 = new Array();
+        var obj = { text: "THESAURUS", nodes: objContainerAr };
+        tree1.push(obj);
+
+        return tree1;
+    }
+
+
+
+    function GetDropDownValue() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetDropDownItems", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                $.each(data.items, function (i, val) {
+                    $('#dr1').append($('<option></option>').val(val.Id).html(val.value));
+
+
+                });
+                $('#dr1').selectpicker('render');
+                $('#dr1').selectpicker('refresh');
+            }
+        });
+
+    }
+    function AddItemD(value) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddDropDownItems", "home")' + "/" + value,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function () {
+                $("#myModal").modal('hide');
+                GetDropDownValue();
+            },
+            error: function () {
+                alert('Error');
+            }
+
+        });
+    }
+
+
+    function GetAntology(item_id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetOntology", "home")' + "/" + item_id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (data) {
+                if (data == "false") {
+                    $('.selectpicker').selectpicker('val', 'Mustard');
+                }
+                else {
+                    $('#dropdown1').select2('val', data.dropdown1);
+                    $('#dropdown2').select2('val', data.dropdown3);
+
+                    $('#dr1 option:selected').text(data.dropdown2);
+
+                    $('.selectpicker').selectpicker('refresh');
+                }
+
+            },
+            error: function () {
+                console.log(data);
+            }
+
+        });
+    }
+
+    function Ontology(item_id) {
+
+        var val1 = $('#dropdown1').select2('val');
+        var val2 = $('#dr1 option:selected').text();
+        var val3 = $('#dropdown2').select2('val');
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddOntology", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "item_id": item_id,
+                "dropdown1": val1,
+                "dropdown2": val2,
+                "dropdown3": val3
+            }),
+            success: function (data) {
+
+                $('#dropdown1').typeahead('val','');
+                $('#dr1 option:selected').text('');
+                $('#dropdown2').typeahead('val','');
+                GetOnT();
+
+            },
+            error: function (data) {
+
+                console.log(data);
+            }
+
+        });
+    }
+
+    function GetOnT() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetOntologyTable", "home")'+ "/" + @ViewBag.DocId,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+
+                $('#ont').html('');
+                var html = '';
+                $.each(data, function (index, value) {
+                    html += '<tr>';
+                    html += '<td>' + value.dropdown1 + '</td>';
+                    html += '<td>' + value.dropdown2 + '</td>';
+                    html += '<td>' + value.dropdown3 + '</td>';
+                    html += '</tr>';
+
+                });
+                $('#ont').html(html);
+            },
+            error: function (data) {
+
+                console.log(data);
+            }
+
+        });
+    }
+
+    function DeleteItem(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteItem", "home")' + "/" + id,
+            contentType: "application/json; charset=utf-8",
+
+            dataType: "json",
+            success: function () {
+                $('#' + id).hide("drop", { direction: "down" }, "slow");
+            },
+            error: function () {
+                alert('Error');
+            }
+
+        });
+    }
+    function DeleteDropDownItems(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteDropDownItems", "home")' + "/" + id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                $('#dr1').html('');
+                GetDropDownValue();
+
+            },
+            error: function () {
+                alert('Error');
+            }
+
+        });
+    }
+    function AddItem(){
+        var name =  $('#new_item_tree').val();
+        $("#myModal1").modal('hide');
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddItemTree", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:JSON.stringify({
+                "name":name
+            }),
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+
+        });
+    }
+
+    function AddItemS(){
+        var name =  $('#new_item_syn').val();
+        var type =  $('#type_syn option:selected').text();
+
+        $("#addSyn").modal('hide');
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddItemSyn", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:JSON.stringify({
+                "name":name,
+                "type":type,
+                "select_id":select_id
+            }),
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                console.log(data);
+            }
+
+        });
+
+    }
+
+    $( document ).ajaxStart(function() {
+        $('html,body').css('cursor','wait');
+    });
+    $( document ).ajaxStop(function() {
+        $('html,body').css('cursor','auto');
+    });
+    var select_id='';
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('html,body').css('cursor','initial');
+        $('#tree1').unbind('activate_node.jstree');
+        $("#tree1").bind("activate_node.jstree", function (event, data) {
+            if (data.node.type == "second") {
+
+                $('#modalShow').prop('disabled', false);
+                $('#remove').prop('disabled', false);
+                $('#save').prop('disabled', false);
+
+                var id = data.node.li_attr.rel;
+                select_id = id;
+                $('#dropdown1').typeahead('val','');
+                $('#dr1 option:selected').text('');
+                $('#dropdown2').typeahead('val','');
+                $('.selectpicker').prop('disabled', false);
+                $('.selectpicker').selectpicker('render');
+                $('.selectpicker').selectpicker('refresh');
+                var cl = function () { Ontology(id); };
+                $('#save').unbind('click');
+                $('#save').click(cl);
+                GetAntology(id);
+            }
+
+        }).jstree({
+
+            "core": {
+                "check_callback": true,
+
+            },
+
+
+            "types": {
+
+                "default": {
+                    "icon": "glyphicon glyphicon glyphicon-stop"
+                },
+                "first": {
+                    "icon": "glyphicon glyphicon-folder-open"
+                },
+                "second": {
+                    "icon": "glyphicon glyphicon-th-large"
+                }
+            },
+            "contextmenu": {
+                "items": function ($node) {
+                    if($node.parent=="first")
+                    {
+                        return {
+                            //"Add": {
+                            //    "label": "Add new",
+                            //    "icon":"glyphicon glyphicon-plus",
+                            //    "action": function (obj) {
+                            //        $("#myModal1").modal('show');
+                            //    }
+                            //},
+                            "AddN": {
+                                "label": "Add new Term",
+                                "icon":"glyphicon glyphicon-plus",
+                                "action": function (obj) {
+                                    $('#addTerm').modal('show');
+                                }
+                            },
+                            "Add new synonyms": {
+                                "label": "Add new synonyms",
+                                "icon":"glyphicon glyphicon-plus",
+                                "action": function (obj) {
+                                    $("#addSyn").modal('show');
+                                }
+                            },
+                            "Delete": {
+                                "label": "Delete term",
+                                "icon":"glyphicon glyphicon-remove",
+                                "action": function (obj) {
+                                    var retVal = confirm("Are you sure you want to delete the term ?");
+                                    if( retVal == true ){
+                                        RemoveNode($node.li_attr.rel);
+                                        var ref = $('#tree1').jstree(true),
+                                        sel = ref.get_selected();
+                                        if (!sel.length) { return false; }
+                                        ref.delete_node(sel);
+                                    }
+                                }
+                            }
+
+                        };
+                    }
+                    if($node.type=="second")
+                    {
+                        return {
+                            "Delete": {
+                                "label": "Delete term",
+                                "icon":"glyphicon glyphicon-remove",
+                                "action": function (obj) {
+                                    var retVal = confirm("Are you sure you want to delete the term ?");
+                                    if( retVal == true ){
+                                        RemoveNode($node.li_attr.rel);
+                                        var ref = $('#tree1').jstree(true),
+                                        sel = ref.get_selected();
+                                        if (!sel.length) { return false; }
+                                        ref.delete_node(sel);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "plugins": ["types", "contextmenu", "html_data", "dnd", "crrm"]
+        });
+
+        $("#tree1").jstree("open_node", "#first");
+
+    });
+</script>
