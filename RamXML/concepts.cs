@@ -22,6 +22,7 @@ namespace RamXML
         public int id { get; set; }
         public int id_doc { get; set; }
         public Nullable<int> parent { get; set; }
+        public string value { get; set; }
     
         public virtual doc doc { get; set; }
         public virtual ICollection<nodes> nodes { get; set; }

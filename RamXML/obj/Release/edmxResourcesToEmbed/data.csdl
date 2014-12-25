@@ -42,6 +42,7 @@
     <Property Name="parent" Type="Int32" />
     <NavigationProperty Name="doc" Relationship="ramxmlModel.FK_concepts_doc" FromRole="concepts" ToRole="doc" />
     <NavigationProperty Name="nodes" Relationship="ramxmlModel.FK_nodes_concepts" FromRole="concepts" ToRole="nodes" />
+    <Property Name="value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="doc">
     <Key>

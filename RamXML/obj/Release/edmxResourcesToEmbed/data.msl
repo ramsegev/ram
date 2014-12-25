@@ -24,6 +24,7 @@
     <EntitySetMapping Name="concepts">
       <EntityTypeMapping TypeName="ramxmlModel.concepts">
         <MappingFragment StoreEntitySet="concepts">
+          <ScalarProperty Name="value" ColumnName="value" />
           <ScalarProperty Name="parent" ColumnName="parent" />
           <ScalarProperty Name="id_doc" ColumnName="id_doc" />
           <ScalarProperty Name="id" ColumnName="id" />

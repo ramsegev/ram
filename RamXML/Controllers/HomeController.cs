@@ -99,13 +99,18 @@ namespace RamXML.Controllers
                         //db.SaveChanges();
                         foreach (XmlNode child in item)
                         {
+                            
                             nodes node = new nodes();
                             node.id_concept = conceptDB.id;
                             node.nodeName = child.Name;
                             node.value = child.InnerText;
-
+                            if (child.Name == "DESCRIPTOR")
+                            {
+                                conceptDB.value = child.InnerText;
+                            }
                             conceptDB.nodes.Add(node);
                             db.Entry(node).State = EntityState.Added;
+                            db.Entry(conceptDB).State = EntityState.Modified;
                             
                             
                         }
@@ -141,7 +146,107 @@ namespace RamXML.Controllers
 
         }
 
+        public ActionResult CreateTree()
+        {
+            db.Configuration.AutoDetectChangesEnabled = false;
+            doc docTable = db.doc.OrderByDescending(d => d.id).FirstOrDefault();
+            int i = 0;
+            foreach (concepts item in db.concepts)
+            {
+                i = i + 1;
+                foreach (nodes node in item.nodes )
+                {
+                    if (node.nodeName == "BT")
+                    {
+                        try
+                        {
+                            concepts parent = db.concepts.SingleOrDefault(c => c.value == node.value);
+                            if(parent !=null)
+                            {
+                                node.concepts.parent = parent.id;
+                                db.Entry(node).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                
+                                concepts newConcepts = new concepts();
+                                newConcepts.id_doc = docTable.id;
+                                newConcepts.value = node.value;
+                                db.Entry(newConcepts).State = EntityState.Added;
+                                db.SaveChanges();
 
+                                nodes newNode = new nodes();
+                                newNode.id_concept = newConcepts.id;
+                                newNode.nodeName = "DESCRIPTOR";
+                                newNode.value = node.value;
+                                
+                                db.Entry(newNode).State = EntityState.Added;
+                                newConcepts.nodes.Add(newNode);
+                                docTable.concepts.Add(newConcepts);
+
+                                node.concepts.parent = newConcepts.id;
+                                db.Entry(node).State = EntityState.Modified;
+                                
+                                
+
+                            }
+                            
+                            
+                        }
+                        catch (Exception)
+                        {
+                            
+                            
+                        }
+                        
+                    }
+                    if(node.nodeName == "NT")
+                    {
+                        try
+                        {
+
+                            concepts parent = db.concepts.SingleOrDefault(c => c.value == node.value);
+                            if(parent !=null)
+                            {
+                                parent.parent = node.concepts.id;
+                                db.Entry(parent).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                concepts newConcepts = new concepts();
+                                newConcepts.id_doc = docTable.id;
+                                newConcepts.value = node.value;
+                                newConcepts.parent = node.concepts.id;
+                                db.Entry(newConcepts).State = EntityState.Added;
+                                db.SaveChanges();
+
+                                nodes newNode = new nodes();
+                                newNode.id_concept = newConcepts.id;
+                                newNode.nodeName = "DESCRIPTOR";
+                                newNode.value = node.value;
+
+                                db.Entry(newNode).State = EntityState.Added;
+                                newConcepts.nodes.Add(newNode);
+                                docTable.concepts.Add(newConcepts);
+                            }
+                            
+                        }
+                        catch (Exception)
+                        {
+
+                            
+
+                            
+                        }
+                        
+                    }
+                    
+                }
+                System.Diagnostics.Debug.WriteLine(i.ToString());
+            }
+            db.SaveChanges();
+            return Json("True", JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult Search(string Query)
         {

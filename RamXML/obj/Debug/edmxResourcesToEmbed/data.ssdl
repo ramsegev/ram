@@ -7,6 +7,7 @@
     <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="id_doc" Type="int" Nullable="false" />
     <Property Name="parent" Type="int" />
+    <Property Name="value" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="doc">
     <Key>
@@ -55,7 +56,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_nodes_concepts">
-    <End Role="concepts" Type="Self.concepts" Multiplicity="1" />
+    <End Role="concepts" Type="Self.concepts" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="nodes" Type="Self.nodes" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="concepts">

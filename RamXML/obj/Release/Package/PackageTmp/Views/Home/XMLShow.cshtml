@@ -16,6 +16,7 @@
     <div class="panel-body">
         <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-upload"></span> Upload new</a>
         <button class="btn btn-default disabled"><span class="glyphicon glyphicon-download"></span> Download current</button>
+        <button class="btn btn-default" onclick="CreateTree()"><span class="glyphicon glyphicon-tasks"></span> Build Tree</button>
 
     </div>
 </div>
@@ -283,6 +284,22 @@
 
 
 <script type="text/javascript">
+
+    function CreateTree(){
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CreateTree", "home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
 
     function AddSynToTerm(){
         if($("#nameSyn").val() !="")
