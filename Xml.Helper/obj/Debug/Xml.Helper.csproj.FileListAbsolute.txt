@@ -11,3 +11,12 @@ C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\D
 C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Debug\PagedList.Mvc.dll
 C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Debug\PagedList.xml
 C:\Users\helll_000\Documents\Visual Studio 2013\Projects\RamXML\Xml.Helper\bin\Debug\PagedList.Mvc.xml
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\Xml.Helper.dll
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\Xml.Helper.pdb
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\PagedList.dll
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\PagedList.Mvc.dll
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\PagedList.xml
+E:\GitHub\Ram\ram\Xml.Helper\bin\Debug\PagedList.Mvc.xml
+E:\GitHub\Ram\ram\Xml.Helper\obj\Debug\Xml.Helper.csprojResolveAssemblyReference.cache
+E:\GitHub\Ram\ram\Xml.Helper\obj\Debug\Xml.Helper.dll
+E:\GitHub\Ram\ram\Xml.Helper\obj\Debug\Xml.Helper.pdb
