@@ -31,7 +31,11 @@ namespace RamXML
                       "~/Scripts/jquery.bootpag.min.js",
                       "~/Scripts/typeahead.bundle.js",
                       "~/Scripts/select2.js",
-                      
+                      "~/Scripts/jquery.jsPlumb-1.7.2.js",
+                      "~/Scripts/jquery.biltong-0.2.js",
+                      "~/Scripts/jquery.jsBezier-0.6.js",
+                      "~/Scripts/jquery.katavorio-0.4.js",
+                      "~/Scripts/jquery.mottle-0.4.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

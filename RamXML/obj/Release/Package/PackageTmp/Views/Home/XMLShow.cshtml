@@ -46,10 +46,29 @@
 
 
         <ul class="nav nav-tabs" role="tablist" id="myTab">
-            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">TreeView</a></li>
-            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">ListView</a></li>
+            @{
+
+                for (int i = 0; i < ViewBag.docs.Count; i++)
+                {
+                    if (i == ViewBag.docs.Count - 1)
+                    {
+                        <li role="presentation" class="active" id="@ViewBag.docs[i].id"><a href="#" aria-controls="home" role="tab" onclick="ChangeDoc(@ViewBag.docs[i].id)" data-toggle="tab">@ViewBag.docs[i].name.Remove(ViewBag.docs[i].name.Length - 4)</a></li>
+                    }
+                    else
+                    {
+                        <li role="presentation" id="@ViewBag.docs[i].id"><a href="#" aria-controls="home" role="tab" onclick="ChangeDoc(@ViewBag.docs[i].id)" data-toggle=" tab">@ViewBag.docs[i].name.Remove(ViewBag.docs[i].name.Length - 4)</a></li>
+                    }
+
+
+
+                }
+
+}
 
         </ul>
+
+
+
 
 
         <div class="tab-content">
@@ -85,6 +104,9 @@
 
 
     </div>
+
+
+
     <div class="col-md-6" id="sticky1">
 
         <div class="panel panel-primary">
@@ -379,7 +401,7 @@
                 dataType: "json",
                 data: JSON.stringify({
                     "Page": $.session.get('page'),
-                    "Count": 20,
+                    "Count": 1,
                 }),
                 success: function (data) {
                     $('#treeObj').html(data);
@@ -408,7 +430,7 @@
                 dataType: "json",
                 data: JSON.stringify({
                     "Page": num,
-                    "Count": 20,
+                    "Count": 1,
                 }),
                 success: function (data) {
                     $('#treeObj').html(data);
@@ -779,6 +801,14 @@
             }
 
         });
+    }
+
+    function ChangeDoc(id){
+        $('.nav li').removeClass('active');
+        $('#'+id).addClass('active');
+        $("body").css("cursor", "progress");
+        window.location.href = "XMLShow?id="+id;
+       
     }
 
     function AddItemS(){

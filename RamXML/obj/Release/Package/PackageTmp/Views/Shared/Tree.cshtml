@@ -8,7 +8,7 @@
 <ul>
 
     <li data-jstree='{ "type" : "first" }' id="first">
-        Thesaurus
+        @ViewBag.docName.Remove(ViewBag.docName.Length - 4)
         <ul>
             
             @Html.Raw(Model.LoadTree(ViewBag.Page, ViewBag.Count));

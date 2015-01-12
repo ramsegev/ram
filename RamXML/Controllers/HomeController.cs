@@ -23,6 +23,7 @@ namespace RamXML.Controllers
 
         public ActionResult Index()
         {
+            
             return View();
         }
 
@@ -149,9 +150,9 @@ namespace RamXML.Controllers
         public ActionResult CreateTree()
         {
             db.Configuration.AutoDetectChangesEnabled = false;
-            doc docTable = db.doc.OrderByDescending(d => d.id).FirstOrDefault();
+            doc docTable = db.doc.FirstOrDefault(d => d.id == 40);
             int i = 0;
-            foreach (concepts item in db.concepts)
+            foreach (concepts item in docTable.concepts)
             {
                 i = i + 1;
                 foreach (nodes node in item.nodes )
@@ -234,9 +235,6 @@ namespace RamXML.Controllers
                         catch (Exception)
                         {
 
-                            
-
-                            
                         }
                         
                     }
@@ -285,11 +283,16 @@ namespace RamXML.Controllers
         {
             if (nodeType == "default")
             {
-                int nId = Convert.ToInt16(newId);
-                int oId = Convert.ToInt16(oldId);
+                int nId = Convert.ToInt32(newId);
+                int oId = Convert.ToInt32(oldId);
+                concepts con = db.concepts.SingleOrDefault(c=>c.id==nId);
+                
                 nodes node = db.nodes.Single(n => n.id == oId);
+                
                 node.id_concept = nId;
+                con.nodes.Add(node);
                 db.Entry(node).State = EntityState.Modified;
+                db.Entry(con).State = EntityState.Modified;
                 db.SaveChanges();
             }
             else if (nodeType == "second")
@@ -357,21 +360,36 @@ namespace RamXML.Controllers
             return View(new DccModel(d));
         }
 
-       
-        public ActionResult XMLShow(string fileName, string searchString, int? page)
-        {
-            
 
-                doc docTable = db.doc.OrderByDescending(i => i.id).FirstOrDefault();
+        public ActionResult XMLShow(string id)
+        {
+
+           
+
+           
+            db.SaveChanges();
+            
+                int _id = Convert.ToInt32(id);
+                ViewBag.docs = db.doc.ToList();
+                doc docTable;
+                if (id != null)
+                {
+                    docTable = db.doc.SingleOrDefault(d => d.id == _id);
+                }
+                else
+                {
+                    docTable = db.doc.OrderByDescending(i => i.id).FirstOrDefault();
+                }
+                
                 IEnumerable<ontology> oTable = db.ontology.Where(o => o.id_doc == docTable.id);
                 ViewBag.ontology = oTable;
                 IEnumerable<nodes> nodes = db.nodes.Where(nod => nod.concepts.doc.id == docTable.id);
                 ViewBag.nodes = nodes;
                 ViewBag.DocId = docTable.id;
                 ViewBag.docName = docTable.name;
-                ViewBag.PagesCount = Math.Ceiling((double)docTable.concepts.Count / 20);
+                ViewBag.PagesCount = Math.Ceiling((double)docTable.concepts.Count / 1);
                 ViewBag.Page = 0;
-                ViewBag.Count = 20;
+                ViewBag.Count = 1;
                 return View(new DccModel(docTable));
             
 
@@ -384,6 +402,7 @@ namespace RamXML.Controllers
             doc docTable = db.doc.OrderByDescending(i => i.id).FirstOrDefault();
             ViewBag.Page = Page;
             ViewBag.Count = Count;
+            ViewBag.docName = docTable.name;
             return PartialView("Tree", new DccModel(docTable));
         }
         public ActionResult DeleteItem(string id)
@@ -571,6 +590,123 @@ namespace RamXML.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
 
             }
+        }
+
+        public class li_attr
+        {
+            public string rel { get; set; }
+        }
+        public class Node
+        {
+            public string id { get; set; }
+
+            public string text { get; set; }
+
+            public string icon { get; set; }
+            public bool children { get; set; }
+
+            public li_attr li_attr { get; set; }
+
+            public string a_attr { get; set; }
+
+        }
+
+        
+        public ActionResult GetFirstLevel()
+        {
+
+            doc doc = db.doc.SingleOrDefault(d => d.id == 36);
+            IEnumerable<concepts> con = doc.concepts.Where(c => c.parent == null);
+            List<Node> nodes = new List<Node>();
+            
+            
+            foreach (concepts concept in con)
+            {
+                Node node = new Node();
+                node.id = concept.id.ToString();
+                node.text = concept.value;
+                node.icon = "glyphicon glyphicon-th-large";
+                if (concept.nodes.Count !=0){node.children = true;}
+                else {node.children = false; }
+                node.li_attr = new li_attr { rel = "first" };
+                node.a_attr = "test";
+                nodes.Add(node);
+                
+            }
+            
+            
+            return Json(nodes, JsonRequestBehavior.AllowGet);
+        }
+
+        
+        public ActionResult GetChildrenLevel(string id)
+        {
+            doc doc = db.doc.SingleOrDefault(d => d.id == 36);
+            int _id = Convert.ToInt32(id);
+            IEnumerable<concepts> con = doc.concepts.Where(c => c.parent == _id);
+            List<Node> nodes = new List<Node>();
+            if(con != null && con.Any())
+            {
+                foreach (concepts concept in con)
+                {
+                    Node node = new Node();
+                    node.id = concept.id.ToString();
+                    node.text = concept.value;
+                    node.icon = "glyphicon glyphicon-th-large";
+                    if (concept.nodes.Count != 0) 
+                    {
+                        node.children = true;
+                        node.li_attr = new li_attr { rel = "second" };
+                    }
+                    else {
+                        node.children = false;
+                        node.li_attr = new li_attr { rel = "default" };
+                    }
+                    
+                    node.a_attr = "test";
+                    nodes.Add(node);
+                    foreach (nodes item in concept.nodes)
+                    {
+                        if (item.nodeName != "DESCRIPTOR")
+                        {
+                            Node nodeChild = new Node();
+                            nodeChild.id = item.id.ToString();
+                            nodeChild.text = item.value;
+                            nodeChild.icon = "glyphicon glyphicon glyphicon-stop";
+                            nodeChild.children = false;
+                            nodeChild.li_attr = new li_attr { rel = "default" };
+                            nodeChild.a_attr = "test";
+                            nodes.Add(nodeChild);
+                        }
+
+                    }
+
+                }
+            }
+            else
+            {
+                IEnumerable<nodes> nod = db.nodes.Where(n => n.id_concept == _id);
+                foreach (nodes item in nod)
+                {
+                    if (item.nodeName != "DESCRIPTOR")
+                    {
+                        Node nodeChild = new Node();
+                        nodeChild.id = item.id.ToString();
+                        nodeChild.text = item.value;
+                        nodeChild.icon = "glyphicon glyphicon glyphicon-stop";
+                        nodeChild.children = false;
+                        nodeChild.li_attr = new li_attr { rel = "default" };
+                        nodeChild.a_attr = "test";
+                        nodes.Add(nodeChild);
+                    }
+
+                }
+
+
+            }
+            
+            
+            return Json(nodes, JsonRequestBehavior.AllowGet);
         }
 
     }
