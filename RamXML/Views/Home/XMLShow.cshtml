@@ -548,7 +548,7 @@
             if(firstNode !="")
             {
                 console.log($("#treeAjax1").find('#data.node.id'));
-                jsPlumb.connect({source:firstNode, target:$('.secondTree #'+data.node.id)});
+                jsPlumb.connect({source:firstNode, target:data.node.id});
             }
         })
         $("#treeAjax").bind('move_node.jstree', function (e, data) {
@@ -582,7 +582,7 @@
                 'data': {
                     'url': function (node) {
                         return node.id === '#' ?
-                          '@Url.Action("GetFirstLevel", "home")' : '@Url.Action("GetChildrenLevel", "home")';
+                          '@Url.Action("GetFirstLevel1", "home")' : '@Url.Action("GetChildrenLevel1", "home")';
                     },
                     'data': function (node) {
                         return { 'id': node.id };

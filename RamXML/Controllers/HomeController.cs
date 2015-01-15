@@ -709,6 +709,101 @@ namespace RamXML.Controllers
             return Json(nodes, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetFirstLevel1()
+        {
+
+            doc doc = db.doc.SingleOrDefault(d => d.id == 36);
+            IEnumerable<concepts> con = doc.concepts.Where(c => c.parent == null);
+            List<Node> nodes = new List<Node>();
+
+
+            foreach (concepts concept in con)
+            {
+                Node node = new Node();
+                node.id = concept.id.ToString() +"_1";
+                node.text = concept.value;
+                node.icon = "glyphicon glyphicon-th-large";
+                if (concept.nodes.Count != 0) { node.children = true; }
+                else { node.children = false; }
+                node.li_attr = new li_attr { rel = "first" };
+                node.a_attr = "test";
+                nodes.Add(node);
+
+            }
+
+
+            return Json(nodes, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetChildrenLevel1(string id)
+        {
+            doc doc = db.doc.SingleOrDefault(d => d.id == 36);
+            int _id = Convert.ToInt32(id.Remove(id.Length-2,2));
+            IEnumerable<concepts> con = doc.concepts.Where(c => c.parent == _id);
+            List<Node> nodes = new List<Node>();
+            if (con != null && con.Any())
+            {
+                foreach (concepts concept in con)
+                {
+                    Node node = new Node();
+                    node.id = concept.id.ToString() + "_1";
+                    node.text = concept.value;
+                    node.icon = "glyphicon glyphicon-th-large";
+                    if (concept.nodes.Count != 0)
+                    {
+                        node.children = true;
+                        node.li_attr = new li_attr { rel = "second" };
+                    }
+                    else
+                    {
+                        node.children = false;
+                        node.li_attr = new li_attr { rel = "default" };
+                    }
+
+                    node.a_attr = "test";
+                    nodes.Add(node);
+                    foreach (nodes item in concept.nodes)
+                    {
+                        if (item.nodeName != "DESCRIPTOR")
+                        {
+                            Node nodeChild = new Node();
+                            nodeChild.id = item.id.ToString() + "_1";
+                            nodeChild.text = item.value;
+                            nodeChild.icon = "glyphicon glyphicon glyphicon-stop";
+                            nodeChild.children = false;
+                            nodeChild.li_attr = new li_attr { rel = "default" };
+                            nodeChild.a_attr = "test";
+                            nodes.Add(nodeChild);
+                        }
+
+                    }
+
+                }
+            }
+            else
+            {
+                IEnumerable<nodes> nod = db.nodes.Where(n => n.id_concept == _id);
+                foreach (nodes item in nod)
+                {
+                    if (item.nodeName != "DESCRIPTOR")
+                    {
+                        Node nodeChild = new Node();
+                        nodeChild.id = item.id.ToString();
+                        nodeChild.text = item.value;
+                        nodeChild.icon = "glyphicon glyphicon glyphicon-stop";
+                        nodeChild.children = false;
+                        nodeChild.li_attr = new li_attr { rel = "default" };
+                        nodeChild.a_attr = "test";
+                        nodes.Add(nodeChild);
+                    }
+
+                }
+
+
+            }
+
+
+            return Json(nodes, JsonRequestBehavior.AllowGet);
+        }
     }
 
 }
